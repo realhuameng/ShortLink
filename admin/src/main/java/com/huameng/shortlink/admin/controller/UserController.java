@@ -1,6 +1,9 @@
 package com.huameng.shortlink.admin.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.huameng.shortlink.admin.common.convention.result.Result;
+import com.huameng.shortlink.admin.common.convention.result.Results;
+import com.huameng.shortlink.admin.dto.resp.UserActualRespDto;
 import com.huameng.shortlink.admin.dto.resp.UserRespDto;
 import com.huameng.shortlink.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +25,16 @@ public class UserController {
      */
     @GetMapping("/api/shortlink/v1/user/{username}")
     public Result<UserRespDto> getUserByUsername(@PathVariable("username") String username){
-        UserRespDto result = userService.getUserByUsername(username);
-        if(result == null){
-            return new Result<UserRespDto>().setCode("-1").setMessage("用户查询为空");
-        }else{
-            return new Result<UserRespDto>().setCode("0").setMessage("查询成功").setData(result);
-        }
+        return Results.success(userService.getUserByUsername(username));
+    }
 
+    /**
+     * 根据用户名查询真实用户信息
+     * @param username
+     * @return
+     */
+    @GetMapping("/api/shortlink/v1/actual/user/{username}")
+    public Result<UserActualRespDto> getActualUserByUsername(@PathVariable("username") String username){
+        return Results.success(BeanUtil.toBean(userService.getUserByUsername(username), UserActualRespDto.class));
     }
 }
