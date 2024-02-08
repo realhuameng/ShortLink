@@ -1,6 +1,7 @@
 package com.huameng.shortlink.admin.common.convention.result;
 
 import com.huameng.shortlink.admin.common.convention.errorCode.BaseErrorCode;
+import com.huameng.shortlink.admin.common.convention.exception.AbstractException;
 
 import java.util.Optional;
 

@@ -3,6 +3,9 @@ package com.huameng.shortlink.admin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.huameng.shortlink.admin.common.convention.result.Result;
+import com.huameng.shortlink.admin.common.convention.result.Results;
+import com.huameng.shortlink.admin.common.enums.UserErrorCodeEnum;
 import com.huameng.shortlink.admin.dao.entity.UserDO;
 import com.huameng.shortlink.admin.dao.mapper.UserMapper;
 import com.huameng.shortlink.admin.dto.resp.UserRespDto;
@@ -25,10 +28,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         UserDO userDO = baseMapper.selectOne(queryWrapper);
         UserRespDto result = new UserRespDto();
         if(userDO == null){
-            return null;
+            return
         }else{
-            BeanUtils.copyProperties(userDO, result);
-            return result;
+            return Results.success(result);
         }
 
     }
