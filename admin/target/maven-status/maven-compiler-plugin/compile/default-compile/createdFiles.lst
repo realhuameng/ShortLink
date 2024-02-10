@@ -4,9 +4,11 @@ com\huameng\shortlink\admin\common\convention\result\Result.class
 com\huameng\shortlink\admin\common\convention\exception\RemoteException.class
 com\huameng\shortlink\admin\service\UserService.class
 com\huameng\shortlink\admin\common\convention\exception\ClientException.class
+com\huameng\shortlink\admin\config\RBloomFilterConfiguration.class
 com\huameng\shortlink\admin\common\enums\UserErrorCodeEnum.class
 com\huameng\shortlink\admin\common\convention\exception\AbstractException.class
 com\huameng\shortlink\admin\common\web\GlobalExceptionHandler.class
+com\huameng\shortlink\admin\dto\resp\UserActualRespDto.class
 com\huameng\shortlink\admin\dto\resp\UserRespDto.class
 com\huameng\shortlink\admin\common\convention\errorCode\BaseErrorCode.class
 com\huameng\shortlink\admin\common\convention\exception\ServiceException.class
@@ -14,4 +16,6 @@ com\huameng\shortlink\admin\service\impl\UserServiceImpl.class
 com\huameng\shortlink\admin\common\convention\result\Results.class
 com\huameng\shortlink\admin\dao\entity\UserDO.class
 com\huameng\shortlink\admin\dao\mapper\UserMapper.class
+com\huameng\shortlink\admin\dto\req\UserRegisterReqDto.class
+com\huameng\shortlink\admin\common\serialize\PhoneDesensitizationSerializer.class
 com\huameng\shortlink\admin\controller\UserController.class

@@ -2,6 +2,8 @@ D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admi
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\dao\mapper\UserMapper.java
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\service\UserService.java
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\dao\entity\UserDO.java
+D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\dto\resp\UserActualRespDto.java
+D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\dto\req\UserRegisterReqDto.java
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\service\impl\UserServiceImpl.java
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\common\convention\exception\ServiceException.java
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\common\convention\exception\ClientException.java
@@ -12,6 +14,8 @@ D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admi
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\common\convention\errorCode\IErrorCode.java
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\controller\UserController.java
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\common\convention\errorCode\BaseErrorCode.java
+D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\config\RBloomFilterConfiguration.java
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\ShortLinkAdminApplication.java
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\common\convention\result\Result.java
 D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\common\convention\exception\RemoteException.java
+D:\idea_javaproject\ShortLink-all\admin\src\main\java\com\huameng\shortlink\admin\common\serialize\PhoneDesensitizationSerializer.java
