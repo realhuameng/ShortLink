@@ -4,6 +4,8 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
+
 @SpringBootApplication
 @MapperScan("com.huameng.shortlink.admin.dao.mapper")
 public class ShortLinkAdminApplication {
