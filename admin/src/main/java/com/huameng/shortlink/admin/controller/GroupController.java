@@ -1,7 +1,12 @@
 package com.huameng.shortlink.admin.controller;
 
+import com.huameng.shortlink.admin.common.convention.result.Result;
+import com.huameng.shortlink.admin.common.convention.result.Results;
+import com.huameng.shortlink.admin.dto.req.ShortLinkGroupSaveReqDto;
 import com.huameng.shortlink.admin.service.GroupService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -12,4 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class GroupController {
 
     private final GroupService groupService;
+
+    /**
+     * 短链接分组
+     * @param requestParam
+     * @return
+     */
+    @PostMapping("/api/short-link/v1/group")
+    public Result<Void> save(@RequestBody ShortLinkGroupSaveReqDto requestParam){
+        groupService.saveGroup(requestParam.getName());
+        return Results.success();
+    }
+
 }
