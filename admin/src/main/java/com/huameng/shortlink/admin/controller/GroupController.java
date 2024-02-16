@@ -19,7 +19,7 @@ public class GroupController {
     private final GroupService groupService;
 
     /**
-     * 短链接分组
+     * 新增短链接分组
      * @param requestParam
      * @return
      */
