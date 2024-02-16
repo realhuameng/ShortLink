@@ -101,6 +101,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                 .eq(UserDO::getPassword, requestParam.getPassword())
                 .eq(UserDO::getDelFlag, 0);
         UserDO userDO = baseMapper.selectOne(queryWrapper);
+        if(userDO == null){
+            throw new ClientException("不存在");
+        }
         Map<Object ,Object> hasLoginMap = stringRedisTemplate.opsForHash().entries("login_" + requestParam.getUsername());
         if (CollUtil.isNotEmpty(hasLoginMap)) {
             String token = hasLoginMap.keySet().stream()
@@ -109,9 +112,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                     .orElseThrow(() -> new ClientException("用户登录错误"));
             return new UserLoginRespDto(token);
         }
-//        if(userDO == null){
-//            throw new ClientException("不存在");
-//        }
+
         /**
          * Hash
          * Key：login_用户名
@@ -121,7 +122,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
          */
         String uuid = UUID.randomUUID().toString();
         stringRedisTemplate.opsForHash().put("login_" + requestParam.getUsername(), uuid, JSON.toJSONString(userDO));
-        stringRedisTemplate.expire("login_" + requestParam.getUsername(), 30L, TimeUnit.MINUTES);
+        stringRedisTemplate.expire("login_" + requestParam.getUsername(), 30L, TimeUnit.DAYS);
         return new UserLoginRespDto(uuid);
 
     }
