@@ -1,9 +1,12 @@
 package com.huameng.shortlink.project.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.huameng.shortlink.project.dao.entity.ShortLinkDO;
 import com.huameng.shortlink.project.dto.req.ShortLinkCreateReqDto;
+import com.huameng.shortlink.project.dto.req.ShortLinkPageReqDto;
 import com.huameng.shortlink.project.dto.resp.ShortLinkCreateRespDto;
+import com.huameng.shortlink.project.dto.resp.ShortLinkPageRespDto;
 
 /**
  * 短链接接口层
@@ -17,4 +20,10 @@ public interface ShortLinkService extends IService<ShortLinkDO>{
      */
     ShortLinkCreateRespDto createShortLink(ShortLinkCreateReqDto requestParam);
 
+    /**
+     * 短链接分组查询
+     * @param requestParam
+     * @return
+     */
+    IPage<ShortLinkPageRespDto> pageShortLink(ShortLinkPageReqDto requestParam);
 }
