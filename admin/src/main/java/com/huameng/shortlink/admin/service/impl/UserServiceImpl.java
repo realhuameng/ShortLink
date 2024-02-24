@@ -17,12 +17,14 @@ import com.huameng.shortlink.admin.dto.req.UserRegisterReqDto;
 import com.huameng.shortlink.admin.dto.req.UserUpdateDto;
 import com.huameng.shortlink.admin.dto.resp.UserLoginRespDto;
 import com.huameng.shortlink.admin.dto.resp.UserRespDto;
+import com.huameng.shortlink.admin.service.GroupService;
 import com.huameng.shortlink.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +33,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static com.huameng.shortlink.admin.common.constant.RedisCacheConstant.LOCK_USER_REGISTER_KEY;
-import static com.huameng.shortlink.admin.common.enums.UserErrorCodeEnum.USER_NAME_EXIST;
-import static com.huameng.shortlink.admin.common.enums.UserErrorCodeEnum.USER_SAVE_ERROR;
+import static com.huameng.shortlink.admin.common.enums.UserErrorCodeEnum.*;
 
 /**
  * 用户接口实现层
@@ -45,6 +46,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
     private final RedissonClient redissonClient;
     private final StringRedisTemplate stringRedisTemplate;
+
+    private final GroupService groupService;
     @Override
     public UserRespDto getUserByUsername(String username) {
         LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
@@ -67,21 +70,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public void register(UserRegisterReqDto requestParam) {
-        if(!hasUsername(requestParam.getUsername())){
+        if (!hasUsername(requestParam.getUsername())) {
             throw new ClientException(USER_NAME_EXIST);
         }
         RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
-        try{
-            if(lock.tryLock()){
-                int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
-                if(inserted < 1){
-                    throw new ClientException(USER_SAVE_ERROR);
+        try {
+            if (lock.tryLock()) {
+                try {
+                    int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
+                    if (inserted < 1) {
+                        throw new ClientException(USER_SAVE_ERROR);
+                    }
+                } catch (DuplicateKeyException ex) {
+                    throw new ClientException(USER_EXIST);
                 }
                 userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
                 return;
             }
             throw new ClientException(USER_NAME_EXIST);
-        }finally {
+        } finally {
             lock.unlock();
         }
     }

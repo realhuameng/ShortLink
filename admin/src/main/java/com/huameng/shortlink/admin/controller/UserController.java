@@ -78,7 +78,7 @@ public class UserController {
      * @param requestParam
      * @return
      */
-    @PostMapping("/api/short-link/admin/v1/user/login")
+    @PostMapping("/api/short-link/v1/user/login")
     public Result<UserLoginRespDto> login(@RequestBody UserLoginReqDto requestParam){
         return Results.success(userService.login(requestParam));
     }

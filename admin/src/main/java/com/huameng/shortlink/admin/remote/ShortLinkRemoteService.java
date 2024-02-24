@@ -8,9 +8,11 @@ import com.huameng.shortlink.admin.common.convention.result.Result;
 import com.huameng.shortlink.admin.remote.dto.req.ShortLinkCreateReqDto;
 import com.huameng.shortlink.admin.remote.dto.req.ShortLinkPageReqDto;
 import com.huameng.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDto;
+import com.huameng.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDto;
 import com.huameng.shortlink.admin.remote.dto.resp.ShortLinkPageRespDto;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +20,11 @@ import java.util.Map;
  */
 public interface ShortLinkRemoteService {
 
+    /**
+     * 分页查询
+     * @param requestParam
+     * @return
+     */
     default Result<IPage<ShortLinkPageRespDto>> pageShortLink(ShortLinkPageReqDto requestParam){
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("gid", requestParam.getGid());
@@ -37,6 +44,19 @@ public interface ShortLinkRemoteService {
     default Result<ShortLinkCreateRespDto> createShortLink(ShortLinkCreateReqDto requestParam){
         String resultBodyStr = HttpUtil.post("http://127.0.0.1:8001/api/short-link/project/v1/create", JSON.toJSONString(requestParam));
         return JSON.parseObject(resultBodyStr, new TypeReference<>() {
+        });
+    }
+
+    /**
+     * 查询分组短链接数量
+     * @param requestParam
+     * @return
+     */
+    default Result<List<ShortLinkGroupCountQueryRespDto>> listGroupShortLinkCount(List<String> requestParam){
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("requestParam", requestParam);
+        String resultPageStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/project/v1/count", requestMap);
+        return JSON.parseObject(resultPageStr, new TypeReference<>() {
         });
     }
 }
