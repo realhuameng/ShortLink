@@ -2,16 +2,15 @@ package com.huameng.shortlink.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.huameng.shortlink.admin.common.convention.result.Result;
+import com.huameng.shortlink.admin.common.convention.result.Results;
 import com.huameng.shortlink.admin.remote.ShortLinkRemoteService;
 import com.huameng.shortlink.admin.remote.dto.req.ShortLinkCreateReqDto;
 import com.huameng.shortlink.admin.remote.dto.req.ShortLinkPageReqDto;
+import com.huameng.shortlink.admin.remote.dto.req.ShortLinkUpdateReqDto;
 import com.huameng.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDto;
 import com.huameng.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDto;
 import com.huameng.shortlink.admin.remote.dto.resp.ShortLinkPageRespDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -48,9 +47,20 @@ public class ShortLinkController {
      * @param requestParam
      * @return
      */
-    @GetMapping("/api/short-link/project/v1/count")
+    @GetMapping("/api/short-link/admin/v1/count")
     public Result<List<ShortLinkGroupCountQueryRespDto>> listGroupShortLinkCount(List<String> requestParam){
         return shortLinkRemoteService.listGroupShortLinkCount(requestParam);
 
+    }
+
+    /**
+     * 修改短链接相关信息
+     * @param requestParam
+     * @return
+     */
+    @PutMapping("/api/short-link/admin/v1/update")
+    public Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDto requestParam){
+        shortLinkRemoteService.updateShortLink(requestParam);
+        return Results.success();
     }
 }
