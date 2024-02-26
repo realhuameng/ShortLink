@@ -10,7 +10,6 @@ import java.util.Date;
  */
 @Data
 public class ShortLinkCreateReqDto {
-
     /**
      * 域名
      */
