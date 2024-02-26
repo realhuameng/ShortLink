@@ -5,15 +5,13 @@ import com.huameng.shortlink.project.common.convention.result.Result;
 import com.huameng.shortlink.project.common.convention.result.Results;
 import com.huameng.shortlink.project.dto.req.ShortLinkCreateReqDto;
 import com.huameng.shortlink.project.dto.req.ShortLinkPageReqDto;
+import com.huameng.shortlink.project.dto.req.ShortLinkUpdateReqDto;
 import com.huameng.shortlink.project.dto.resp.ShortLinkCreateRespDto;
 import com.huameng.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDto;
 import com.huameng.shortlink.project.dto.resp.ShortLinkPageRespDto;
 import com.huameng.shortlink.project.service.ShortLinkService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -53,5 +51,16 @@ public class ShortLinkController {
     public Result<List<ShortLinkGroupCountQueryRespDto>> listGroupShortLinkCount(List<String> requestParam){
         return Results.success(shortLinkService.listGroupShortLinkCount(requestParam));
 
+    }
+
+    /**
+     * 修改短链接相关信息
+     * @param requestParam
+     * @return
+     */
+    @PutMapping("/api/short-link/project/v1/update")
+    public Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDto requestParam){
+        shortLinkService.updateShortLink(requestParam);
+        return Results.success();
     }
 }
