@@ -153,7 +153,6 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             resultPage.setDomain("http://" + resultPage.getDomain());
             return resultPage;
         });
-
     }
 
     @Override
