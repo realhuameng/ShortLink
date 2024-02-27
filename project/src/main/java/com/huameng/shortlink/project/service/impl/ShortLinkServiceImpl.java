@@ -30,6 +30,10 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jodd.util.StringUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -40,6 +44,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +85,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 .shortUri(shortLinkSuffix)
                 .enableStatus(0)
                 .fullShortUrl(fullShortUrl)
+                .favicon(getFavicon(requestParam.getOriginUrl()))
                 .build();
         //短链接跳转
         ShortLinkGotoDO linkGotoDO = ShortLinkGotoDO.builder()
@@ -280,7 +287,22 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             }finally {
                 lock.unlock();
             }
+    }
 
-
+    @SneakyThrows
+    private String getFavicon(String url){
+        URL targetUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) targetUrl.openConnection();
+        connection.setRequestMethod("GET");
+        connection.connect();
+        int responseCode = connection.getResponseCode();
+        if(responseCode == HttpURLConnection.HTTP_OK){
+            Document document = Jsoup.connect(url).get();
+            Element faviconLink = document.select("link[rel~=(?i)^(shortcut )?icon]").first();
+            if(faviconLink != null){
+                return faviconLink.attr("abs:href");
+            }
+        }
+        return null;
     }
 }
