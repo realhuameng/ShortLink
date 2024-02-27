@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -100,7 +101,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         //缓存预热
         stringRedisTemplate.opsForValue()
                 .set(
-                        fullShortUrl,
+                        String.format(GOTO_SHORT_LINK_KEY, fullShortUrl),
                         requestParam.getOriginUrl(),
                         LinkUtil.getLinkCacheValidDate(requestParam.getValidDate()),
                         TimeUnit.MILLISECONDS
@@ -253,8 +254,19 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .eq(ShortLinkDO::getEnableStatus, 0);
                 ShortLinkDO shortLinkDO = baseMapper.selectOne(queryWrapper);
                 if(shortLinkDO != null){
-                    //跳转前将链接添加到缓存中
-                    stringRedisTemplate.opsForValue().set(String.format(GOTO_SHORT_LINK_KEY, fullShortUrl), shortLinkDO.getOriginUrl());
+                    //查到的短链接如果已经过期
+                    if(shortLinkDO.getValidDate() != null && shortLinkDO.getValidDate().before(new Date())){
+                        stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl), "-", 30, TimeUnit.MINUTES);
+                        return;
+                    }
+                    //跳转前将链接添加到缓存中（缓存预热）
+                    stringRedisTemplate.opsForValue()
+                            .set(
+                                    String.format(GOTO_SHORT_LINK_KEY, fullShortUrl),
+                                    shortLinkDO.getOriginUrl(),
+                                    LinkUtil.getLinkCacheValidDate(shortLinkDO.getValidDate()),
+                                    TimeUnit.MILLISECONDS
+                            );
                     ((HttpServletResponse) response).sendRedirect(shortLinkDO.getOriginUrl());
                 }
             }finally {
