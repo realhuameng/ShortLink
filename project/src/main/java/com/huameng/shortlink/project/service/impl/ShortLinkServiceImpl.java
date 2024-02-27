@@ -222,12 +222,18 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         }
         //判断布隆过滤器中是否存在
         //存在：返回
-        if(!shortUriCreateCachePenetrationBloomFilter.contains(fullShortUrl))
+        if(!shortUriCreateCachePenetrationBloomFilter.contains(fullShortUrl)){
+            ((HttpServletResponse) response).sendRedirect("/page/notfound");
             return;
+        }
+
         //不存在：
         String gotoIsNullShortLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl));
-        if(StringUtil.isNotBlank(gotoIsNullShortLink))
+        if(StringUtil.isNotBlank(gotoIsNullShortLink)){
+            ((HttpServletResponse) response).sendRedirect("/page/notfound");
             return;
+        }
+
 
         //分布式锁防止缓存击穿
         RLock lock = redissonClient.getLock(String.format(LOCK_GOTO_SHORT_LINK_KEY, fullShortUrl));
@@ -244,6 +250,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 ShortLinkGotoDO shortLinkGotoDO = shortLinkGotoMapper.selectOne(linkGotoQueryWrapper);
                 if(shortLinkGotoDO == null){
                     stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl), "-", 30, TimeUnit.MINUTES);
+                    ((HttpServletResponse) response).sendRedirect("/page/notfound");
                     //风控
                     return;
                 }
@@ -257,6 +264,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     //查到的短链接如果已经过期
                     if(shortLinkDO.getValidDate() != null && shortLinkDO.getValidDate().before(new Date())){
                         stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl), "-", 30, TimeUnit.MINUTES);
+                        ((HttpServletResponse) response).sendRedirect("/page/notfound");
                         return;
                     }
                     //跳转前将链接添加到缓存中（缓存预热）
