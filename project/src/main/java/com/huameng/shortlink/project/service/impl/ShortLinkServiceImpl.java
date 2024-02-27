@@ -23,6 +23,7 @@ import com.huameng.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDto;
 import com.huameng.shortlink.project.dto.resp.ShortLinkPageRespDto;
 import com.huameng.shortlink.project.service.ShortLinkService;
 import com.huameng.shortlink.project.toolkit.HashUtil;
+import com.huameng.shortlink.project.toolkit.LinkUtil;
 import groovy.util.logging.Slf4j;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -96,6 +97,14 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             }
 
         }
+        //缓存预热
+        stringRedisTemplate.opsForValue()
+                .set(
+                        fullShortUrl,
+                        requestParam.getOriginUrl(),
+                        LinkUtil.getLinkCacheValidDate(requestParam.getValidDate()),
+                        TimeUnit.MILLISECONDS
+                );
         shortUriCreateCachePenetrationBloomFilter.add(fullShortUrl);
         return ShortLinkCreateRespDto.builder()
                 .fullShortUrl("http://" + shortLinkDO.getFullShortUrl())
