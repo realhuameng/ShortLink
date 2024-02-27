@@ -5,8 +5,9 @@ import com.huameng.shortlink.admin.common.convention.result.Result;
 import com.huameng.shortlink.admin.common.convention.result.Results;
 import com.huameng.shortlink.admin.dto.req.RecycleBinSaveReqDto;
 import com.huameng.shortlink.admin.remote.ShortLinkRemoteService;
-import com.huameng.shortlink.admin.remote.dto.req.ShortLinkPageReqDto;
+import com.huameng.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDto;
 import com.huameng.shortlink.admin.remote.dto.resp.ShortLinkPageRespDto;
+import com.huameng.shortlink.admin.service.RecycleBinService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class RecycleBinController {
+
+    private final RecycleBinService recycleBinService;
 
     ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {
     };
@@ -40,7 +43,7 @@ public class RecycleBinController {
      * @return
      */
     @GetMapping("/api/short-link/admin/v1/recycle-bin/page")
-    public Result<IPage<ShortLinkPageRespDto>> pageShortLink(ShortLinkPageReqDto requestParam){
-        return shortLinkRemoteService.pageRecycleBinShortLink(requestParam);
+    public Result<IPage<ShortLinkPageRespDto>> pageShortLink(ShortLinkRecycleBinPageReqDto requestParam){
+        return recycleBinService.pageRecycleBinShortLink(requestParam);
     }
 }

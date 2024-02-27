@@ -8,6 +8,7 @@ import com.huameng.shortlink.admin.common.convention.result.Result;
 import com.huameng.shortlink.admin.dto.req.RecycleBinSaveReqDto;
 import com.huameng.shortlink.admin.remote.dto.req.ShortLinkCreateReqDto;
 import com.huameng.shortlink.admin.remote.dto.req.ShortLinkPageReqDto;
+import com.huameng.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDto;
 import com.huameng.shortlink.admin.remote.dto.req.ShortLinkUpdateReqDto;
 import com.huameng.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDto;
 import com.huameng.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDto;
@@ -96,9 +97,9 @@ public interface ShortLinkRemoteService {
      * @param requestParam
      * @return
      */
-    default Result<IPage<ShortLinkPageRespDto>> pageRecycleBinShortLink(ShortLinkPageReqDto requestParam){
+    default Result<IPage<ShortLinkPageRespDto>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDto requestParam){
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("gid", requestParam.getGid());
+        requestMap.put("gidList", requestParam.getGidList());
         requestMap.put("current", requestParam.getCurrent());
         requestMap.put("size", requestParam.getSize());
         String resultPageStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/project/recycle-bin/page", requestMap);
